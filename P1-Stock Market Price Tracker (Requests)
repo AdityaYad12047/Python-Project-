@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from tkinter import Tk, Label, Entry, Button, messagebox
 
 # Step 1: API Setup
-API_KEY = "57NSFQM329SD308B"  # Replace with your API key
+API_KEY = "57NSFQM329SD308B" 
 BASE_URL = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=57NSFQM329SD308B"
 
 def get_stock_price(symbol):
