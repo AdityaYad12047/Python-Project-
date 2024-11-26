@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        header {
+            background: #4CAF50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        main {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+            border-radius: 4px;
+            word-wrap: break-word;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>URL Shortener</h1>
+    </header>
+    <main>
+        <label for="url">Enter a URL to shorten:</label>
+        <input type="text" id="url" placeholder="e.g., https://www.example.com">
+        <button onclick="shortenURL()">Shorten URL</button>
+        
+        <div id="output" class="output" style="display: none;"></div>
+        <div id="error" class="error" style="display: none;"></div>
+    </main>
+
+    <script>
+        async function shortenURL() {
+            const urlInput = document.getElementById("url").value.trim();
+            const outputDiv = document.getElementById("output");
+            const errorDiv = document.getElementById("error");
+
+            // Reset output and error messages
+            outputDiv.style.display = "none";
+            errorDiv.style.display = "none";
+
+            if (!urlInput) {
+                errorDiv.textContent = "Please enter a valid URL.";
+                errorDiv.style.display = "block";
+                return;
+            }
+
+            try {
+                const response = await fetch("/shorten", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ url: urlInput }),
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    outputDiv.textContent = `Shortened URL: ${data.short_url}`;
+                    outputDiv.style.display = "block";
+                } else {
+                    errorDiv.textContent = data.error || "An error occurred.";
+                    errorDiv.style.display = "block";
+                }
+            } catch (error) {
+                errorDiv.textContent = `Error: ${error.message}`;
+                errorDiv.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
